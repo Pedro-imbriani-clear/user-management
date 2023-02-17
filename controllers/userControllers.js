@@ -8,14 +8,34 @@ class UserController{
     
         this.formEl.addEventListener("submit", event =>{
             event.preventDefault();
-   
-         this.addLine(this.getValuesser);
+         let values =   this.getValues();
+            values.photo = "";
+            this.getPhoto((content)=>{
+                values.photo = content; 
+                this.addLine(values);
+            });
+         this.addLine(values);
             });
             
     }
+    getPhoto(callback){
+
+        let fileReader = new FileReader();
+        let elementes = [...this.formEl.elementes].filter(item=>{
+            if (item.name === "photo"){
+                return item;
+            }
+        });
+        let file =elementes[0].files[0] ;
+        fileReader.onload = ()=>{
+            callback(fileReader.result);
+        };
+        fileReader.readAsDataURL(file);
+    }
     getValues(){
        let user = {};
-      this.formEl.elementes.forEach(function(field, index){
+       
+      [...this.formEl.elementes].forEach(function(field, index){
             if(field.name == "gender"){
                 if(field.checked){
                     user[field.name] = field.value;
@@ -43,7 +63,7 @@ class UserController{
 
         this.tableEl.innerHTML = `
         <tr>
-            <td><img src="dist/img/user1-128x128.jpg" alt="User Image" class="img-circle img-sm"></td>
+            <td><img src="${dataUser.photo}" alt="User Image" class="img-circle img-sm"></td>
             <td>${dataUser.name}</td>
             <td>${dataUser.email}</td>
             <td>${dataUser.admin}</td>
