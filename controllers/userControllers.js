@@ -11,10 +11,11 @@ class UserController{
     
         this.formEl.addEventListener("submit", event =>{
             event.preventDefault(); 
-           let btn = this.formEl.querySelector("[type=submit]");
+            let btn = this.formEl.querySelector("[type=submit]");
             btn.distable = true;
 
-         let values =   this.getValues();
+            let values =   this.getValues();
+            if (!values) return false;
             this.getPhoto().then(
                 (content)=>{
                     values.photo = content; 
@@ -59,8 +60,12 @@ class UserController{
     }
     getValues(){
        let user = {};
-       
+       let isValid = true;
       [...formEl.elements].forEach(function(field, index){
+        if (["name","email","password"].indexOf(field.name) > -1 && !field.value){
+            field.parentElement.classList.add("has-error");
+            return false;
+        }
             if(field.name == "gender"){
                 if(field.checked){
                     user[field.name] = field.value;
@@ -79,6 +84,9 @@ class UserController{
             
         
         });
+        if(!isValid){
+            return false;
+        }
         return new User(
             user.name, 
             user.gender, 
@@ -95,11 +103,12 @@ class UserController{
         let tr = document.createElement("tr");
 
         tr.innerHTML = `
-        d><img src="${dataUser.photo}" alt="User Image" class="img-circle img-sm"></td>
+        
+        <td><img src="${dataUser.photo}" alt="User Image" class="img-circle img-sm"></td>
             <td>${dataUser.name}</td>
             <td>${dataUser.email}</td>
             <td>${(dataUser.admin) ? "sim" : "nao"}</td>
-            <td>${dataUser.register}</td>
+            <td>${Utils.dateFormat(dataUser.register)}</td>
             <td>
             <button type="button" class="btn btn-primary btn-xs btn-flat">Editar</button>
             <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
