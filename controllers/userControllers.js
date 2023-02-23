@@ -172,6 +172,7 @@ class UserController {
        let tr =  this.getTr(dataUser);
         this.tableEl.appendChild(tr);
         this.updateCount();
+        
         }
         getTr(dataUser, tr = null){
             if(tr === null) tr = document.createElement("tr");

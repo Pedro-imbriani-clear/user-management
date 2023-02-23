@@ -11,6 +11,7 @@ constructor(name, gender,birth, country, email,admin,photo,password){
     this._email = email;
     this._register = new Date();
 }
+
 get id(){
     return this._id
 }
